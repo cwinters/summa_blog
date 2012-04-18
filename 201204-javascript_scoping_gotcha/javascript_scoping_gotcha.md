@@ -85,8 +85,9 @@ And a similar Perl program in strict mode...
     Execution of outside_block.pl aborted due to compilation errors.
 
 Instead in JavaScript we get the last value of `i` that failed
-the loop's conditional test. This is a glimpse at the functional
-vs.  block scope that winds up biting us.
+the loop's conditional test. That this variable is even
+accessible is a glimpse at the functional vs.  block scope that
+winds up biting us.
 
 But back to our basic question: why does the closure that gets
 executed __within__ `createMapped_1()` not return the same value
@@ -187,7 +188,7 @@ And the output:
 Ouch, back to square one! And it's for the same reason -- the
 value of `i` is bound to the outer function, so we're still just
 referencing that same value after the loop is finished. Let's
-rewrite it to use an assigment (like our second attempt, above)
+rewrite it to use an assignment (like our second attempt, above)
 but __inside__ our IIFE instead of __outside__:
 
     function createMapped_5( items ) {
@@ -237,12 +238,12 @@ variables for the closure to reference, like:
 
 This may feel cleaner because you're explicitly localizing the
 variables used by the closure. But you are introducing multiple
-names for the same values, which can be a problem for
-comprehension. And if your closure references many variables it
-can get unwieldly, though that may point out the need for other
-work to do -- refactoring by consolidating multiple parameters
-into an object, or breaking the closure into multiple functions,
-or something else.
+names for the same values which can be a problem for the humans
+comprehending your code. . And if your closure references many
+variables it can get unwieldly, though that may point out the
+need for other work to do -- refactoring by consolidating
+multiple parameters into an object, or breaking the closure into
+multiple functions, or something else.
 
 ## Additional reading:
 

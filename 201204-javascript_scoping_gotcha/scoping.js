@@ -36,7 +36,7 @@ function createMapped_4( items ) {
     var mapped = {};
     for ( var i = 1; i <= items.length; i++ ) {
         (function() {
-            mapped[i] = (function() { return function() { return items[i-1]; }; })();
+            mapped[i] = (function() { return function() { return items[i-1] } })();
             print( "Mapped    [Key: " + i + "] [Result: " + mapped[i]() + "]" );
         })();
     }
@@ -49,7 +49,7 @@ function createMapped_5( items ) {
     for ( var i = 1; i <= items.length; i++ ) {
         (function() {
             var value = items[i-1];
-            mapped[i] = (function() { return function() { return value; }; })();
+            mapped[i] = function() { return value };
             print( "Mapped    [Key: " + i + "] [Result: " + mapped[i]() + "]" );
         })();
     }
@@ -61,7 +61,7 @@ function createMapped_6( items ) {
     var mapped = {};
     for ( var i = 1; i <= items.length; i++ ) {
         (function( map, key, value ) {
-            map[key] = (function() { return function() { return value; }; })();
+            map[key] = function() { return value };
             print( "Mapped    [Key: " + key + "] [Result: " + map[key]() + "]" );
         })( mapped, i, items[i-1] );
     }
