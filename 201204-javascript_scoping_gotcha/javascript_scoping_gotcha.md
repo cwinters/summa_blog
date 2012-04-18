@@ -246,12 +246,15 @@ or something else.
 
 ## Additional reading:
 
+* [Code for this post](https://github.com/cwinters/summa_blog/tree/master/201204-javascript_scoping_gotcha)
 * [Explaining JavaScript Scope And Closures](http://robertnyman.com/2008/10/09/explaining-javascript-scope-and-closures/)
 * [Immediately-Invoked Function Expression (IIFE)](http://benalman.com/news/2010/11/immediately-invoked-function-expression/)
 * [Gotcha gotcha](http://calculist.blogspot.com/2005/12/gotcha-gotcha.html)
   
 
 ----------------------------------------
+
+## Extra stuff
 
 Ruby's complaint is slightly different. With:
 
