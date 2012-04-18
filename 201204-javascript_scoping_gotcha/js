@@ -1,0 +1,1 @@
+java -cp rhino-1.7R3.jar org.mozilla.javascript.tools.shell.Main -version 170 $*
