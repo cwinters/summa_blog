@@ -1,4 +1,4 @@
-# Testing with a headless browser: CasperJS
+# Testing with CasperJS
 
 CasperJS is a library that makes it easier to manipulate the
 headless WebKit browser provided by PhantomJS. It's similar to

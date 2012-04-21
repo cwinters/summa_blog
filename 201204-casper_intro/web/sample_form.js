@@ -1,3 +1,12 @@
+function generateCheckbox( memory ) {
+    var checkboxTemplate = '<input type="checkbox" name="memory" value="%i" id="memory_%i" /> '
+                           + '<label for="memory_%i">%n (%d)</label> <br />';
+    var date = new Date( memory.date );
+    return checkboxTemplate.replace( /%i/g, memory.id )
+               .replace( /%n/g, memory.name )
+               .replace( /%d/g, date.getFullYear() + '/' + ( date.getMonth() + 1 ) );
+}
+
 $(document).ready( function() {
     $( '#has_axe_yes' ).click( function() {
         $( '#axe_extras' ).show();
@@ -5,7 +14,19 @@ $(document).ready( function() {
     $( '#has_axe_no' ).click( function() {
         $( '#axe_extras' ).hide();
     });
-
+    $( '#person_age' ).change( function() {
+        var ageId = $(this).val();
+        if ( ! ageId ) return;
+        var memoriesPath = 'memories_' + ageId + '.json';
+        console.log( "Loading memories from: " + memoriesPath );
+        $.getJSON( memoriesPath, function( memories ) {
+            $( '#person_age_memories' ).empty();
+            _.each( memories, function( memory ) {
+                $( '#person_age_memories' ).append( generateCheckbox( memory ) );
+            });
+            $( '#person_age_memories' ).show();
+        });
+    });;
     $( '#sample_form' ).submit( function() {
         var errors = [];
         var idToName = [
@@ -21,7 +42,7 @@ $(document).ready( function() {
         var hasErrors = errors.length > 0;
         if ( hasErrors ) {
             var errorList = '<ul>' + _.map( errors, function( error ) {
-                return '<li>' + error + '</li>'
+                return '<li>' + error + '</li>';
             }).join( "\n" ) + '</ul>';
             $( '#errors' ).empty().html( errorList ).show();
         }
