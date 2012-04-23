@@ -14,7 +14,11 @@ This example is on [github][samplerepo] and can be used without a
 webserver. It has a simple form with:
 
 * sections that are conditionally displayed,
-* 
+* form elements dynamically generated from JSON fetched via AJAX,
+* validation on submit
+
+To test it out, just open the file `web/sample_form.html` in a
+browser.
 
 One note -- if you're using Chrome you need to start it like
 this:
@@ -22,12 +26,10 @@ this:
     google-chrome --allow-file-access-from-files
     
 Otherwise the AJAX calls won't be able to load the static JSON
-files (see [#40787][chromefile]).
+files (see [#40787][chromefile]). Firefox should work fine.
 
-First a quick example of a test:
-
-- what are some good examples? create/download a simple todo-list
-  application? Maybe re-use notem?
+First a quick example of a test. We want to ensure that the
+person's name is required.
 
 ## Pros and cons of single programming environment
 

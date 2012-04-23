@@ -1,6 +1,6 @@
 # README: 2012-April Introduction to CasperJS
 
-You should be able to open the web page `web/index.html` and see
+You should be able to open the web page `web/sample_form.html` and see
 what's going on -- fill out the form, click on elements, etc. 
 
 To run CasperJS against it you'll need to put the `web` directory
