@@ -16,7 +16,7 @@ value. Here's a first attempt:
         var mapped = {};
         for ( var i = 1; i <= items.length; i++ ) {
             mapped[i] = function() { return items[i-1] };
-            print( "Mapped    [Key: " + i + "] [Result: " + mapped[i]() + "]" );
+            show_kv( "In ", i, mapped[i]() );
         }
         print( "Last index is: " + i );
         return mapped;
@@ -24,27 +24,31 @@ value. Here's a first attempt:
     
     function showMapped( map ) {
         for ( var key in map ) {
-            print( "Extracted [Key: " + key + "] [Result: " + map[ key ]() + "]" );
+            show_kv( "Out", key, map[ key ]() );
         }
     }
     
+    function show_kv( type,  key, result ) {
+        print( type + " [Key: " + key + "] [Result: " + result + "]" );
+    }
+
     var birds = [ 'owl', 'robin', 'eagle', 'sparrow', 'falcon' ];
     showMapped( createMapped_1( birds ) );
 
 Executing this you'd expect both sets of output to
 match. Instead, you get:
 
-    Mapped    [Key: 1] [Result: owl]
-    Mapped    [Key: 2] [Result: robin]
-    Mapped    [Key: 3] [Result: eagle]
-    Mapped    [Key: 4] [Result: sparrow]
-    Mapped    [Key: 5] [Result: falcon]
+    In  [Key: 1] [Result: owl]
+    In  [Key: 2] [Result: robin]
+    In  [Key: 3] [Result: eagle]
+    In  [Key: 4] [Result: sparrow]
+    In  [Key: 5] [Result: falcon]
     Last index is: 6
-    Extracted [Key: 1] [Result: undefined]
-    Extracted [Key: 2] [Result: undefined]
-    Extracted [Key: 3] [Result: undefined]
-    Extracted [Key: 4] [Result: undefined]
-    Extracted [Key: 5] [Result: undefined]
+    Out [Key: 1] [Result: undefined]
+    Out [Key: 2] [Result: undefined]
+    Out [Key: 3] [Result: undefined]
+    Out [Key: 4] [Result: undefined]
+    Out [Key: 5] [Result: undefined]
 
 Not only is that wrong, but in many languages you'd get a
 compilation error because the variable `i` wouldn't be visible
@@ -102,7 +106,7 @@ from `items`  __outside__ the closure? Such as this:
         for ( var i = 1; i <= items.length; i++ ) {
             var value = items[i-1];
             mapped[i] = function() { return value };
-            print( "Mapped    [Key: " + i + "] [Result: " + mapped[i]() + "]" );
+            show_kv( "In ", i, mapped[i]() );
         }
         print( "Last index is: " + i );
         return mapped;
@@ -110,17 +114,17 @@ from `items`  __outside__ the closure? Such as this:
 
 Running it we get:
 
-    Mapped    [Key: 1] [Result: owl]
-    Mapped    [Key: 2] [Result: robin]
-    Mapped    [Key: 3] [Result: eagle]
-    Mapped    [Key: 4] [Result: sparrow]
-    Mapped    [Key: 5] [Result: falcon]
+    In  [Key: 1] [Result: owl]
+    In  [Key: 2] [Result: robin]
+    In  [Key: 3] [Result: eagle]
+    In  [Key: 4] [Result: sparrow]
+    In  [Key: 5] [Result: falcon]
     Last index is: 6
-    Extracted [Key: 1] [Result: falcon]
-    Extracted [Key: 2] [Result: falcon]
-    Extracted [Key: 3] [Result: falcon]
-    Extracted [Key: 4] [Result: falcon]
-    Extracted [Key: 5] [Result: falcon]
+    Out [Key: 1] [Result: falcon]
+    Out [Key: 2] [Result: falcon]
+    Out [Key: 3] [Result: falcon]
+    Out [Key: 4] [Result: falcon]
+    Out [Key: 5] [Result: falcon]
 
 Different, but still wrong. The cause in both our initial attempt
 and this one is the same, just with a different mask. The output
@@ -135,7 +139,7 @@ function to reflect how JavaScript scoping rules work:
         for ( i = 1; i <= items.length; i++ ) {
             value = items[i-1];
             mapped[i] = function() { return value };
-            print( "Mapped    [Key: " + i + "] [Result: " + mapped[i]() + "]" );
+            show_kv( "In ", i, mapped[i]() );
         }
         print( "Last index is: " + i );
         return mapped;
@@ -164,7 +168,7 @@ like:
         for ( var i = 1; i <= items.length; i++ ) {
             (function() {
                 mapped[i] = (function() { return function() { return items[i-1] } })();
-                print( "Mapped    [Key: " + i + "] [Result: " + mapped[i]() + "]" );
+                show_kv( "In ", i, mapped[i]() );
             })();
         }
         print( "Last index is: " + i );
@@ -173,17 +177,17 @@ like:
 
 And the output:
 
-    Mapped    [Key: 1] [Result: owl]
-    Mapped    [Key: 2] [Result: robin]
-    Mapped    [Key: 3] [Result: eagle]
-    Mapped    [Key: 4] [Result: sparrow]
-    Mapped    [Key: 5] [Result: falcon]
+    In  [Key: 1] [Result: owl]
+    In  [Key: 2] [Result: robin]
+    In  [Key: 3] [Result: eagle]
+    In  [Key: 4] [Result: sparrow]
+    In  [Key: 5] [Result: falcon]
     Last index is: 6
-    Extracted [Key: 1] [Result: undefined]
-    Extracted [Key: 2] [Result: undefined]
-    Extracted [Key: 3] [Result: undefined]
-    Extracted [Key: 4] [Result: undefined]
-    Extracted [Key: 5] [Result: undefined]
+    Out [Key: 1] [Result: undefined]
+    Out [Key: 2] [Result: undefined]
+    Out [Key: 3] [Result: undefined]
+    Out [Key: 4] [Result: undefined]
+    Out [Key: 5] [Result: undefined]
 
 Ouch, back to square one! And it's for the same reason -- the
 value of `i` is bound to the outer function, so we're still just
@@ -196,8 +200,8 @@ but __inside__ our IIFE instead of __outside__:
         for ( var i = 1; i <= items.length; i++ ) {
             (function() {
                 var value = items[i-1];
-                mapped[i] = (function() { return function() { return value } })();
-                print( "Mapped    [Key: " + i + "] [Result: " + mapped[i]() + "]" );
+                mapped[i] = function() { return value };
+                show_kv( "In ", i, mapped[i]() );
             })();
         }
         print( "Last index is: " + i );
@@ -206,17 +210,17 @@ but __inside__ our IIFE instead of __outside__:
 
 The output:
 
-    Mapped    [Key: 1] [Result: owl]
-    Mapped    [Key: 2] [Result: robin]
-    Mapped    [Key: 3] [Result: eagle]
-    Mapped    [Key: 4] [Result: sparrow]
-    Mapped    [Key: 5] [Result: falcon]
+    In  [Key: 1] [Result: owl]
+    In  [Key: 2] [Result: robin]
+    In  [Key: 3] [Result: eagle]
+    In  [Key: 4] [Result: sparrow]
+    In  [Key: 5] [Result: falcon]
     Last index is: 6
-    Extracted [Key: 1] [Result: owl]
-    Extracted [Key: 2] [Result: robin]
-    Extracted [Key: 3] [Result: eagle]
-    Extracted [Key: 4] [Result: sparrow]
-    Extracted [Key: 5] [Result: falcon]
+    Out [Key: 1] [Result: owl]
+    Out [Key: 2] [Result: robin]
+    Out [Key: 3] [Result: eagle]
+    Out [Key: 4] [Result: sparrow]
+    Out [Key: 5] [Result: falcon]
 
 Excellent! Our returned closure no longer references a variable
 that's defined outside the loop, so it resolves properly. 
@@ -228,8 +232,8 @@ variables for the closure to reference, like:
         var mapped = {};
         for ( var i = 1; i <= items.length; i++ ) {
             (function( map, key, value ) {
-                map[key] = (function() { return function() { return value; }; })();
-                print( "Mapped    [Key: " + key + "] [Result: " + map[key]() + "]" );
+                map[key] = function() { return value };
+                show_kv( "In ", i, mapped[i]() );
             })( mapped, i, items[i-1] );
         }
         print( "Last index is: " + i );
