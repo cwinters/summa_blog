@@ -7,8 +7,8 @@ To run CasperJS against it you'll need to put the `web` directory
 in the control of a web server somewhere. Once that's done and
 you've got Casper installed, you should be able to do:
 
-    $ casper test/one.js
+    $ casper test/validation_on_empty_form.js
     
-to execute that script.    
+to execute that script. 
 
 

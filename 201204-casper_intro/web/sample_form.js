@@ -4,7 +4,11 @@ function generateCheckbox( memory ) {
     var date = new Date( memory.date );
     return checkboxTemplate.replace( /%i/g, memory.id )
                .replace( /%n/g, memory.name )
-               .replace( /%d/g, date.getFullYear() + '/' + ( date.getMonth() + 1 ) );
+               .replace( /%d/g, date.getFullYear() );
+}
+
+function isBlank( text ) {
+    return !!(text === null || text === undefined || text === '' || text.match( /^\s+$/ ));
 }
 
 $(document).ready( function() {
@@ -34,17 +38,21 @@ $(document).ready( function() {
             { id : 'person_age',  name : 'Age' },
             { id : 'physician',   name : 'Doctor' }
         ];
-        _.each( idToName, function( pair ) {
-            if ( ! $( '#' + pair.id ).val() ) {
+        _.each( idToName, function( pair ) {            
+            var selector = '#' + pair.id;
+            var fieldValue = $( selector ).val();
+            console.log( "onSubmit: " + selector + " => " + fieldValue );
+            if ( isBlank( fieldValue ) ) {
                 errors.push( pair.name + ' is required.' );
             }
         });
         var hasErrors = errors.length > 0;
+        $( '#errors' ).empty();
         if ( hasErrors ) {
             var errorList = '<ul>' + _.map( errors, function( error ) {
                 return '<li>' + error + '</li>';
             }).join( "\n" ) + '</ul>';
-            $( '#errors' ).empty().html( errorList ).show();
+            $( '#errors' ).html( errorList ).show();
         }
         return ! hasErrors;
     });
