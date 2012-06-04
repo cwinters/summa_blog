@@ -1,33 +1,82 @@
 # Testing with CasperJS
 
-CasperJS is a library that makes it easier to manipulate the
-headless WebKit browser provided by PhantomJS. It's similar to
-other [web automation libraries][wwwmech] in terms of making easy
+[CasperJS][casperjs] is a library that makes it easier to
+manipulate the headless WebKit browser and API provided by
+[PhantomJS][phantomjs]. It's similar to other
+[web automation libraries][wwwmech] in terms of making easy
 things easy, but it adds useful twists by both enabling
 automation in JavaScript, and actually automating an instance of
 a web browser. This post will briefly introduce how you can use
-Casper to test your dynamic application.
+Casper + Phantom to test your dynamic application.
 
 ## Quick example
 
-This example is on [github][samplerepo] and can be used without a
-webserver. It has a simple form with:
+This article has a couple of examples; both are on
+[github][samplerepo] and can be used without a webserver.
+
+First, just about the simplest example possible. Our form
+validates that a person's name has a value when the user submits
+a form; that validation happens client-side. Our test opens the
+page, submits the form, and checks for the message, also
+capturing a screenshot:
+
+    var casper = require( 'casper' ).create();
+    
+    casper.start( 'web/simple_form.html', function() {
+        this.click( '#simple_form_submit' );
+        var errorText = this.fetchText( '#errors' );
+        this.capture( 'simple_1_with_error.png' );
+        this.test.assertMatch( errorText,  /Person name is required/, 
+                               'Expected validation message for person name' );
+    });
+    
+    casper.run( function() {
+        this.test.renderResults( true );
+    });
+
+And running it we get the following, in nice green ANSI
+blocks:
+
+    $ casperjs test/validation_simple.js 
+    PASS Expected validation message for person name
+    PASS 1 tests executed, 1 passed, 0 failed.
+
+Our captured screenshot might look like:
+
+![Simple validation screenshot](images/simple_1_with_error.png)
+
+What's unique about this testing?
+
+1. You get to write in JavaScript! We'll talk more about this
+below, but I think it's a boon to write in the language of the
+environment you're testing (the browser) rather than in your
+server-side language (Ruby, Java, C#, PHP, etc).
+
+2. You're automating a real browser, but with neither the
+deployment hassles of a windowing environment nor the limited
+utility of a 'fake' environment like [Env.js][envjs] or
+[HtmlUnit][htmlunit].
+
+3. You can programmatically manipulate the browser, so doing
+things like capturing screenshots is trivial, as is doing things
+like capturing logging messages from the __browser__ alongside
+your testing logging messages.
+
+## More complex example
+
+Our more complicated example is also a form submission. But it has:
 
 * sections that are conditionally displayed,
 * form elements dynamically generated from JSON fetched via AJAX,
 * validation on submit
 
-To test it out, just open the file `web/sample_form.html` in a
+To test it out, just open the file `web/complex_form.html` in a
 browser. (One note -- if you're using Chrome you need to start it
 with the flag `--allow-file-access-from-files`, oherwise the AJAX
 calls won't be able to load the static JSON files -- see
 [#40787][chromefile].)
 
-First a quick example of a test. We want to ensure that a
-person's name is required. And our validation happens
-client-side.
 
-## Pros and cons of single programming environment
 
 ### Moving data from browser to test: easy
 
@@ -65,6 +114,10 @@ client-side.
 - relatively immature and unsupported
 
 
-[chromefile] http://code.google.com/p/chromium/issues/detail?id=40787
-[samplerepo] https://github.com/cwinters/exercise/tree/master/casperjs/summa_example
-[wwwmech] http://search.cpan.org/search?query=www%3A%3Amechanize&mode=dist
+[casperjs]: http://casperjs.org/
+[chromefile]: http://code.google.com/p/chromium/issues/detail?id=40787
+[envjs]: http://www.envjs.com/
+[htmlunit]: http://htmlunit.sourceforge.net/
+[phantomjs]: http://phantomjs.org/
+[samplerepo]: https://github.com/cwinters/summa_blog/tree/master/201204-casper_intro
+[wwwmech]: http://search.cpan.org/search?query=www%3A%3Amechanize&mode=dist
