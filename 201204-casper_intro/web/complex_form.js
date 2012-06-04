@@ -31,7 +31,7 @@ $(document).ready( function() {
             $( '#person_age_memories' ).show();
         });
     });;
-    $( '#sample_form' ).submit( function() {
+    $( '#complex_form' ).submit( function() {
         var errors = [];
         var idToName = [
             { id : 'person_name', name : 'Person name' },

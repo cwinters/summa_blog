@@ -1,0 +1,38 @@
+<html>
+<head>
+
+<title>1: Simple form for Casper testing</title>
+
+<script type="text/javascript" src="jquery-1.7.1-min.js"></script>
+<script type="text/javascript" src="underscore-1.3.1-min.js"></script>
+<script type="text/javascript">
+function isBlank( text ) {
+    return !!(text === null || text === undefined || text === '' || text.match( /^\s+$/ ));
+}
+
+$(document).ready( function() {
+    $( '#simple_form' ).submit( function() {
+        var fieldValue = $( '#person_name' ).val();
+        var hasErrors = isBlank( fieldValue );
+        if ( hasErrors ) {
+            $( '#errors' ).empty().html( "<p>Person name is required</p>" ).show();
+        }
+        return ! hasErrors;
+    });
+});
+</script>
+
+<link rel="stylesheet" type="text/css" href="style.css" />
+
+</head>
+<body>
+<div id="errors"></div>
+<form id="simple_form" name="simple_form" action="simple_form.html" method="post">
+    Name:
+    <div class="indent">
+        <input type="text" name="person_name" id="person_name" size="40" />
+    </div>
+    <input type="submit" value="Go!" id="simple_form_submit" />
+</form>
+</body>
+</html>

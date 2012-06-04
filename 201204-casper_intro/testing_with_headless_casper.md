@@ -18,18 +18,14 @@ webserver. It has a simple form with:
 * validation on submit
 
 To test it out, just open the file `web/sample_form.html` in a
-browser.
+browser. (One note -- if you're using Chrome you need to start it
+with the flag `--allow-file-access-from-files`, oherwise the AJAX
+calls won't be able to load the static JSON files -- see
+[#40787][chromefile].)
 
-One note -- if you're using Chrome you need to start it like
-this:
-
-    google-chrome --allow-file-access-from-files
-    
-Otherwise the AJAX calls won't be able to load the static JSON
-files (see [#40787][chromefile]). Firefox should work fine.
-
-First a quick example of a test. We want to ensure that the
-person's name is required.
+First a quick example of a test. We want to ensure that a
+person's name is required. And our validation happens
+client-side.
 
 ## Pros and cons of single programming environment
 
