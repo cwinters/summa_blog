@@ -1,4 +1,5 @@
 [
-    { "id" : 202, "date" : 862488218000, "name" : "Played Super Mario" },
+    { "id" : 203, "date" : 862488218000,  "name" : "Played Super Mario" },
+    { "id" : 202, "date" : 973728218000,  "name" : "Waited to see who won the presidency" },
     { "id" : 201, "date" : 1082488218000, "name" : "Went to club" }
 ]

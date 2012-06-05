@@ -4,21 +4,28 @@
 manipulate the headless WebKit browser and API provided by
 [PhantomJS][phantomjs]. It's similar to other
 [web automation libraries][wwwmech] in terms of making easy
-things easy, but it adds useful twists by both enabling
+things easy. But it adds useful twists by both enabling
 automation in JavaScript, and actually automating an instance of
-a web browser. This post will briefly introduce how you can use
-Casper + Phantom to test your dynamic application.
+a web browser vs simple consuming HTML and communicating over
+HTTP. This post will briefly introduce how you can use Casper to
+test your dynamic application.
+
+One note: I won't talk at all about installation. There's no
+reason to copy the
+[excellent documentation from Casper][casperinstall] which tells
+you how to install PhantomJS as well.
 
 ## Quick example
 
 This article has a couple of examples; both are on
 [github][samplerepo] and can be used without a webserver.
 
-First, just about the simplest example possible. Our form
-validates that a person's name has a value when the user submits
-a form; that validation happens client-side. Our test opens the
-page, submits the form, and checks for the message, also
-capturing a screenshot:
+Before giving an overview of Casper, let's go through just about
+the simplest example possible. A form validates that a person's
+name has a value when the user submits a form; that validation
+happens client-side. Our test opens the page, submits the form,
+and checks for the message, also capturing a screenshot (see
+`test/validation_simple.js`):
 
     var casper = require( 'casper' ).create();
     
@@ -34,8 +41,8 @@ capturing a screenshot:
         this.test.renderResults( true );
     });
 
-And running it we get the following, in nice green ANSI
-blocks:
+And running it we get the following, with nice green ANSI blocks
+if you're using a proper terminal:
 
     $ casperjs test/validation_simple.js 
     PASS Expected validation message for person name
@@ -44,6 +51,8 @@ blocks:
 Our captured screenshot might look like:
 
 ![Simple validation screenshot](images/simple_1_with_error.png)
+
+## The unique snowflake of Casper
 
 What's unique about this testing?
 
@@ -62,9 +71,16 @@ things like capturing screenshots is trivial, as is doing things
 like capturing logging messages from the __browser__ alongside
 your testing logging messages.
 
-## More complex example
+For example, you may notice that the screenshot is very small
+(400x300), which is Phantom's default. But you can easily
+manipulate it by just adding a line telling Casper to use a new
+viewport (example in `test/validation_simple_dimensions.js`):
 
-Our more complicated example is also a form submission. But it has:
+    casper.start( 'web/simple_form.html', function() {
+        casper.viewport( 1280, 800 );
+
+The remainder of this will walk through a more complex
+example. It's also a form submission. But it has:
 
 * sections that are conditionally displayed,
 * form elements dynamically generated from JSON fetched via AJAX,
@@ -75,6 +91,14 @@ browser. (One note -- if you're using Chrome you need to start it
 with the flag `--allow-file-access-from-files`, oherwise the AJAX
 calls won't be able to load the static JSON files -- see
 [#40787][chromefile].)
+
+## Turtles most of the way down
+
+The 
+
+## Real browser!
+
+## More complex example
 
 
 
@@ -114,6 +138,7 @@ calls won't be able to load the static JSON files -- see
 - relatively immature and unsupported
 
 
+[casperinstall]: http://casperjs.org/installation.html
 [casperjs]: http://casperjs.org/
 [chromefile]: http://code.google.com/p/chromium/issues/detail?id=40787
 [envjs]: http://www.envjs.com/

@@ -3,6 +3,40 @@ var casper = require( 'casper' ).create();
 //casper.options.logLevel = "debug";
 //casper.options.verbose = true;
 
+casper.start( 'web/complex_form.html', function() {
+    this.capture( '1_initial_form.png' );
+    this.click( '#complex_form_submit' );
+    this.capture( '2_click_blank.png' );
+    assertValidationMessages.call( this, { 'in' : [ 'name', 'age', 'doctor' ], 
+                                           'suffix' : '1: empty' });
+
+    // enter a person, then retry:
+    
+    this.fill( 'form#complex_form', { person_name : 'Esmerelda Villalobos' }, false );
+    this.click( '#complex_form_submit' );
+    this.capture( '3_click_with_person.png' );
+    assertValidationMessages.call( this, { 'in' : [ 'age', 'doctor' ], 'out' : [ 'name' ], 
+                                           'suffix' : '2: +person' } );
+
+    this.fill( 'form#complex_form', { person_age : '2' }, false );
+    this.click( '#complex_form_submit' );
+    this.capture( '4_click_with_age.png' );
+    assertValidationMessages.call( this, { 'in' : [ 'doctor' ], 'out' : [ 'name', 'age' ],
+                                           'suffix' : '3: +age' } );
+
+    this.fill( 'form#complex_form', { physician : '783' }, false );
+    this.click( '#complex_form_submit' );
+    this.capture( '5_click_with_doc.png' );
+    assertValidationMessages.call( this, { 'out' : [ 'name', 'age', 'doctor' ],
+                                           'suffix' : '4: +doc' } );
+    this.test.assertEvalEquals( function() { return $( '#errors' ).html() }, '', 
+                                'No validation error messages' );
+});
+
+casper.run( function() {
+    this.test.renderResults( true );
+});
+
 var assertMismatch = function( subject, pattern, message ) {
     return this.test.assert( ! pattern.test( subject ), message, {
         type: "assertMismatch",
@@ -50,37 +84,3 @@ var assertValidationMessages = function( params ) {
                                     prefix + info.description + suffix );
     }, this );
 };
-
-casper.start( 'web/complex_form.html', function() {
-    this.capture( '1_initial_form.png' );
-    this.click( '#complex_form_submit' );
-    this.capture( '2_click_blank.png' );
-    assertValidationMessages.call( this, { 'in' : [ 'name', 'age', 'doctor' ], 
-                                           'suffix' : '1: empty' });
-
-    // enter a person, then retry:
-    
-    this.fill( 'form#complex_form', { person_name : 'Esmerelda Villalobos' }, false );
-    this.click( '#complex_form_submit' );
-    this.capture( '3_click_with_person.png' );
-    assertValidationMessages.call( this, { 'in' : [ 'age', 'doctor' ], 'out' : [ 'name' ], 
-                                           'suffix' : '2: +person' } );
-
-    this.fill( 'form#complex_form', { person_age : '2' }, false );
-    this.click( '#complex_form_submit' );
-    this.capture( '4_click_with_age.png' );
-    assertValidationMessages.call( this, { 'in' : [ 'doctor' ], 'out' : [ 'name', 'age' ],
-                                           'suffix' : '3: +age' } );
-
-    this.fill( 'form#complex_form', { physician : '783' }, false );
-    this.click( '#complex_form_submit' );
-    this.capture( '5_click_with_doc.png' );
-    assertValidationMessages.call( this, { 'out' : [ 'name', 'age', 'doctor' ],
-                                           'suffix' : '4: +doc' } );
-    this.test.assertEvalEquals( function() { return $( '#errors' ).html() }, '', 
-                                'No validation error messages' );
-});
-
-casper.run( function() {
-    this.test.renderResults( true );
-});

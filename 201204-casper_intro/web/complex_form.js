@@ -1,3 +1,7 @@
+var Page = {
+  memories : []
+};
+
 function generateCheckbox( memory ) {
     var checkboxTemplate = '<input type="checkbox" name="memory" value="%i" id="memory_%i" /> '
                            + '<label for="memory_%i">%n (%d)</label> <br />';
@@ -20,15 +24,23 @@ $(document).ready( function() {
     });
     $( '#person_age' ).change( function() {
         var ageId = $(this).val();
-        if ( ! ageId ) return;
+        console.log( "Age changed, fetching memories associated with age ID: " + ageId );
+        if ( ! ageId ) {
+            $( '#person_age_memories' ).remove();
+            return;
+        }
         var memoriesPath = 'memories_' + ageId + '.json';
         console.log( "Loading memories from: " + memoriesPath );
         $.getJSON( memoriesPath, function( memories ) {
-            $( '#person_age_memories' ).empty();
+            // stash them away for later...
+            Page.memories = memories;
+
+            // if it exists, delete, then re-add
+            $( '#person_age_memories' ).remove();
+            $( '#person_age' ).after( '<div class="indent" id="person_age_memories"></div>' );
             _.each( memories, function( memory ) {
                 $( '#person_age_memories' ).append( generateCheckbox( memory ) );
             });
-            $( '#person_age_memories' ).show();
         });
     });;
     $( '#complex_form' ).submit( function() {
@@ -56,4 +68,5 @@ $(document).ready( function() {
         }
         return ! hasErrors;
     });
+    console.log( "BROWSER: done executing onReady handler" );    
 });
