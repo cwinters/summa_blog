@@ -146,3 +146,8 @@ The
 [phantomjs]: http://phantomjs.org/
 [samplerepo]: https://github.com/cwinters/summa_blog/tree/master/201204-casper_intro
 [wwwmech]: http://search.cpan.org/search?query=www%3A%3Amechanize&mode=dist
+
+## References
+
+Example of functional tests in Magento with CasperJS
+http://www.johannreinke.com/en/2012/05/09/example-of-functional-tests-in-magento-with-casperjs/
