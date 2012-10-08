@@ -5,13 +5,31 @@
 
 <script type="text/javascript" src="jquery-1.7.1-min.js"></script>
 <script type="text/javascript" src="underscore-1.3.1-min.js"></script>
+<script type="text/javascript" src="handlebars-1.0rc1.js"></script>
 <script type="text/javascript" src="complex_form.js"></script>
 
 <link rel="stylesheet" type="text/css" href="style.css" />
 
+<script type="text/handlebars" id="tmpl_checkbox">
+  <input type="checkbox" name="memory" value="{{memory.id}}" id="memory_{{memory.id}}" />
+    <label for="memory_{{memory.id}}">{{memory.name}} ({{year}})</label>
+    <br />
+</script>
+
+<script type="text/handlebars" id="tmpl_errors">
+  <ul>
+    {{#each errors}}
+      <li>{{this}}</li>
+    {{/each}}
+  </ul>  
+</script>
+
 </head>
+
 <body>
+
 <div id="errors"></div>
+
 <form id="complex_form" name="complex_form" action="complex_form.html" method="post">
     Name:
     <div class="indent">
@@ -47,41 +65,57 @@
 
     Gender:
     <div class="indent">
-        <input type="radio" name="gender" value="male" id="gender_male" /> <label for="gender_male">Male</label> |
-        <input type="radio" name="gender" value="female" id="gender_female" /> <label for="gender_female">Female</label> |
-        <input type="radio" name="gender" value="myob" id="gender_myob" /> <label for="gender_myob">None of your beeswax!</label>
+        <input type="radio" name="gender" value="male" id="gender_male" />
+          <label for="gender_male">Male</label> |
+        <input type="radio" name="gender" value="female" id="gender_female" />
+          <label for="gender_female">Female</label> |
+        <input type="radio" name="gender" value="myob" id="gender_myob" />
+          <label for="gender_myob">None of your beeswax!</label>
     </div>
 
     Do you have an axe?
     <div class="indent">
-        <input type="radio" name="has_axe" value="yes" id="has_axe_yes" /> <label for="has_axe_yes">Yes</label> |
-        <input type="radio" name="has_axe" value="no" id="has_axe_no" /> <label for="has_axe_no">No</label> |
-        <input type="radio" name="has_axe" value="maybe" id="has_axe_maybe" /> <label for="has_axe_maybe">Maybe so</label>
+        <input type="radio" name="has_axe" value="yes" id="has_axe_yes" />
+          <label for="has_axe_yes">Yes</label> |
+        <input type="radio" name="has_axe" value="no" id="has_axe_no" />
+          <label for="has_axe_no">No</label> |
+        <input type="radio" name="has_axe" value="maybe" id="has_axe_maybe" />
+          <label for="has_axe_maybe">Maybe so</label>
 
         <div class="indent hidden" id="axe_extras">
             What are its features?
             <div class="indent">
-                <input type="checkbox" name="axe_feature" value="bludgeon" id="axe_bludgeon" /> <label for="axe_bludgeon">Can also be used as bludgeon</label>
-                <br />
-                <input type="checkbox" name="axe_feature" value="thrown" id="axe_thrown" /> <label for="axe_thrown">Can be thrown</label>
-                <br />
-                <input type="checkbox" name="axe_feature" value="double-handed" id="axe_double-handed" /> <label for="axe_double-handed">Double-handed</label>
-                <br />
-                <input type="checkbox" name="axe_feature" value="prop" id="axe_prop" /> <label for="axe_prop">Halloween prop</label>
-                <br />
-                <input type="checkbox" name="axe_feature" value="hatchet" id="axe_hatchet" /> <label for="axe_hatchet">Mistaken for hatchet</label>
-                <br />
-                <input type="checkbox" name="axe_feature" value="self-sharpening" id="axe_self-sharpening" /> <label for="axe_self-sharpening">Self-sharpening</label>
+                <input type="checkbox" name="axe_feature" value="bludgeon" id="axe_bludgeon" />
+                  <label for="axe_bludgeon">Can also be used as bludgeon</label>
+                  <br />
+                <input type="checkbox" name="axe_feature" value="thrown" id="axe_thrown" />
+                  <label for="axe_thrown">Can be thrown</label>
+                  <br />
+                <input type="checkbox" name="axe_feature" value="double-handed" id="axe_double-handed" />
+                  <label for="axe_double-handed">Double-handed</label>
+                  <br />
+                <input type="checkbox" name="axe_feature" value="prop" id="axe_prop" />
+                  <label for="axe_prop">Halloween prop</label>
+                  <br />
+                <input type="checkbox" name="axe_feature" value="hatchet" id="axe_hatchet" />
+                  <label for="axe_hatchet">Mistaken for hatchet</label>
+                  <br />
+                <input type="checkbox" name="axe_feature" value="self-sharpening" id="axe_self-sharpening" />
+                  <label for="axe_self-sharpening">Self-sharpening</label>
             </div>
             Where do you typically use it?
             <div class="indent">
-                <input type="checkbox" name="axe_location" value="barn" id="axe_barn" /> <label for="axe_barn">Barnyard highjinx</label>
-                <br />
-                <input type="checkbox" name="axe_location" value="forest" id="axe_forest" /> <label for="axe_forest">Forest</label>
-                <br />
-                <input type="checkbox" name="axe_location" value="mines" id="axe_mines" /> <label for="axe_mines">Mines of Moria</label>
-                <br />
-                <input type="checkbox" name="axe_location" value="war" id="axe_war" /> <label for="axe_war">War</label>
+                <input type="checkbox" name="axe_location" value="barn" id="axe_barn" />
+                  <label for="axe_barn">Barnyard highjinx</label>
+                  <br />
+                <input type="checkbox" name="axe_location" value="forest" id="axe_forest" />
+                  <label for="axe_forest">Forest</label>
+                  <br />
+                <input type="checkbox" name="axe_location" value="mines" id="axe_mines" />
+                  <label for="axe_mines">Mines of Moria</label>
+                  <br />
+                <input type="checkbox" name="axe_location" value="war" id="axe_war" />
+                  <label for="axe_war">War</label>
             </div>
             How long have you had it?
             <div class="indent">

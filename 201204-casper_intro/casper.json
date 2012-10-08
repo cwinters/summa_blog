@@ -1,0 +1,5 @@
+{
+    "verbose"      : false,
+    "logLevel"     : "debug",
+    "viewportSize" : { "width" : 800, "height" : 600 }
+}

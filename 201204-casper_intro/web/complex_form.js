@@ -1,14 +1,13 @@
 var Page = {
-  memories : []
+    memories  : [],
+    templates : {}
 };
 
 function generateCheckbox( memory ) {
-    var checkboxTemplate = '<input type="checkbox" name="memory" value="%i" id="memory_%i" /> '
-                           + '<label for="memory_%i">%n (%d)</label> <br />';
-    var date = new Date( memory.date );
-    return checkboxTemplate.replace( /%i/g, memory.id )
-               .replace( /%n/g, memory.name )
-               .replace( /%d/g, date.getFullYear() );
+    return Page.templates.checkbox({
+        memory : memory,
+        year   : new Date( memory.date ).getFullYear()
+    });
 }
 
 function isBlank( text ) {
@@ -16,6 +15,9 @@ function isBlank( text ) {
 }
 
 $(document).ready( function() {
+    var checkboxTemplateSource = $( '#tmpl_checkbox' ).html();
+    Page.templates.checkbox = Handlebars.compile( checkboxTemplateSource );
+
     $( '#has_axe_yes' ).click( function() {
         $( '#axe_extras' ).show();
     });
@@ -50,7 +52,7 @@ $(document).ready( function() {
             { id : 'person_age',  name : 'Age' },
             { id : 'physician',   name : 'Doctor' }
         ];
-        _.each( idToName, function( pair ) {            
+        _.each( idToName, function( pair ) {
             var selector = '#' + pair.id;
             var fieldValue = $( selector ).val();
             console.log( "onSubmit: " + selector + " => " + fieldValue );
@@ -68,5 +70,5 @@ $(document).ready( function() {
         }
         return ! hasErrors;
     });
-    console.log( "BROWSER: done executing onReady handler" );    
+    console.log( "BROWSER: done executing onReady handler" );
 });
