@@ -16,3 +16,12 @@ body {
     background-color: #ffc0cb;
     border: 2px solid black;
 }
+
+#chat { 
+    display: none;
+}
+
+#conversation { 
+    border: 2px solid black;
+    min-height: 400px;
+}

@@ -5,14 +5,57 @@
 <title>Testing faye</title>
 <link rel="stylesheet" type="text/css" href="style.css" />
 <script type="text/javascript" src="jquery-1.7.1-min.js"></script>
+<script type="text/javascript" src="underscore-1.3.1-min.js"></script>
+<script type="text/javascript" src="handlebars-1.0rc1.js"></script>
 <script type="text/javascript" src="http://localhost:8081/faye/client.js"></script>
 <script type="text/javascript" src="faye_test.js"></script>
+
+<script type="text/handlebars" id="tmpl_announce">
+  <p class="conversation announced">
+    {{#if joined}} 
+      <img src="arrow_join.png" width="16" height="16" />
+    {{else}}
+      <img src="arrow_branch.png" width="16" height="16" />
+    {{/if}}
+      <b>{{participant}}</b>: <i>{{action}}</i>
+  </p>
+</script>
+
+<script type="text/handlebars" id="tmpl_hear">
+  <p class="conversation heard">
+    <img src="arrow_left.png" width="16" height="16" />
+    <b>{{speaker}}</b>: {{message}}
+  </p>
+</script>
+
+<script type="text/handlebars" id="tmpl_speak">
+  <p class="conversation spoken">
+    <img src="arrow_right.png" width="16" height="16" />
+    {{message}}
+  </p>
+</script>
+
 </head>
 
 <body>
-<form>
-  <input type="text" size="30" name="message" id="message" />
-  <button id="button_send">Send!</button>
-</form>
+
+<div id="identify">
+  <form id="form_identify">
+    Who are you?
+    <input type="text" size="30" name="identification" />
+    <button id="button_identify">Start!</button>
+  </form>
+</div>
+
+<div id="chat">
+  <form id="form_chat">
+    <input type="text" size="30" name="message" id="message" />
+    <button id="button_send">Send!</button>
+    <button id="button_leave">Leave</button>
+  </form>
+  <div id="conversation">
+  </div>
+</div>
+  
 </body>
 </html>

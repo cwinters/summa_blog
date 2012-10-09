@@ -1,4 +1,4 @@
-var serverUrl  = '127.0.0.1';
+var serverUrl  = null;  // empty means ALL
 var port       = 8080;
 
 var BASE       = 'web'; // determine dynamically...
@@ -72,31 +72,33 @@ var httpServer = http.createServer( function ( req, res ) {
 });
 
 httpServer.listen( port, serverUrl );
-console.log( 'Server running at http://' + serverUrl + ':' + port + ' => BRING IT!' );
+
+var displayHost = serverUrl || 'localhost';
+console.log( 'Server running at http://' + displayHost + ':' + port + ' => BRING IT!' );
 
 
 var fayeServer = new faye.NodeAdapter({ mount: '/faye', timeout: 45 });
 //fayeServer.attach( httpServer );
 var fayePort = port + 1;
 fayeServer.bind( 'handshake', function( clientId ) {
-    util.debug( "FAYE: new client connected " + clientId );
+    util.debug( "FAYE: new client connected..... " + clientId );
 });
 
 fayeServer.bind( 'subscribe', function( clientId, topic ) {
-    util.debug( "FAYE: new client subscribed " + clientId + " @ " + topic );
+    util.debug( "FAYE: new client subscribed.... " + clientId + " @ " + topic );
 });
 
 fayeServer.bind( 'unsubscribe', function( clientId, topic ) {
-    util.debug( "FAYE: client unsubscribed " + clientId + " @ " + topic );
+    util.debug( "FAYE: client unsubscribed...... " + clientId + " @ " + topic );
 });
 
 fayeServer.bind( 'publish', function( clientId, topic, message ) {
-    util.debug( "FAYE: message published " + clientId + " @ " + topic + " => " + JSON.stringify( message ) );
+    util.debug( "FAYE: message published........ " + clientId + " @ " + topic + " => " + JSON.stringify( message ) );
 });
 
 
 fayeServer.listen( fayePort, serverUrl );
-console.log( 'Faye running at http://' + serverUrl + ':' + fayePort + ' => BRING IT ASYNC!' );
+console.log( 'Faye running at http://' + displayHost + ':' + fayePort + ' => BRING IT ASYNC!' );
 
 
 function generateNotFound( res, message ) {
