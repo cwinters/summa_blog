@@ -27,7 +27,7 @@ $(document).ready( function() {
     $( '#person_age' ).change( function() {
         var ageId = $(this).val();
         console.log( "Age changed, fetching memories associated with age ID: " + ageId );
-        if ( ! ageId ) {
+        if ( ! ageId || ageId <= 1 ) {
             $( '#person_age_memories' ).remove();
             return;
         }
@@ -60,6 +60,11 @@ $(document).ready( function() {
                 errors.push( pair.name + ' is required.' );
             }
         });
+        var ageValue = $( '#person_age' ).val();
+        if ( ageValue == 1 ) {
+            errors.push( "Age is much too young!" );
+        }
+                                     
         var hasErrors = errors.length > 0;
         $( '#errors' ).empty();
         if ( hasErrors ) {

@@ -25,3 +25,9 @@ body {
     border: 2px solid black;
     min-height: 400px;
 }
+
+.load-target {
+    display : none;
+    border: 2px solid black;
+    background-color: #cdcdcd;
+}

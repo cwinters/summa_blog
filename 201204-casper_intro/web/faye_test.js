@@ -18,7 +18,8 @@ $(document).ready( function() {
 
     $( '#button_identify' ).click( function( uiEvent ) {
         uiEvent.preventDefault();
-        var identification = $(this).siblings().filter( 'input' ).val();
+        //var identification = $(this).siblings().filter( 'input' ).val();
+        var identification = $(this).closest( 'input' );
         if ( conversation.start( identification ) ) {
             $( '#identify' ).hide();
             $( '#chat' ).show();

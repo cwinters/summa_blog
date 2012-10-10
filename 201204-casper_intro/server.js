@@ -1,5 +1,6 @@
 var serverUrl  = null;  // empty means ALL
 var port       = 8080;
+var fayePort   = port + 1;
 
 var BASE       = 'web'; // determine dynamically...
 var DIR_REGEXP = new RegExp( '/$' );
@@ -10,6 +11,11 @@ var faye       = require( 'faye' );
 var fs         = require( 'fs' );
 var http       = require( 'http' );
 var util       = require( 'util' );
+
+function generateNotFound( res, message ) {
+    res.writeHead( 404, NOT_FOUND );
+    res.end( message );
+}
 
 var Dispatcher = function( regexp, type, header ) {
     this.regexp = regexp;
@@ -78,14 +84,13 @@ console.log( 'Server running at http://' + displayHost + ':' + port + ' => BRING
 
 
 var fayeServer = new faye.NodeAdapter({ mount: '/faye', timeout: 45 });
-//fayeServer.attach( httpServer );
-var fayePort = port + 1;
+
 fayeServer.bind( 'handshake', function( clientId ) {
     util.debug( "FAYE: new client connected..... " + clientId );
 });
 
 fayeServer.bind( 'subscribe', function( clientId, topic ) {
-    util.debug( "FAYE: new client subscribed.... " + clientId + " @ " + topic );
+    util.debug( "FAYE: client subscribed.... " + clientId + " @ " + topic );
 });
 
 fayeServer.bind( 'unsubscribe', function( clientId, topic ) {
@@ -96,13 +101,8 @@ fayeServer.bind( 'publish', function( clientId, topic, message ) {
     util.debug( "FAYE: message published........ " + clientId + " @ " + topic + " => " + JSON.stringify( message ) );
 });
 
-
 fayeServer.listen( fayePort, serverUrl );
 console.log( 'Faye running at http://' + displayHost + ':' + fayePort + ' => BRING IT ASYNC!' );
 
 
-function generateNotFound( res, message ) {
-    res.writeHead( 404, NOT_FOUND );
-    res.end( message );
-}
 
